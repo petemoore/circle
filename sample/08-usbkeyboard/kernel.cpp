@@ -18,6 +18,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 #include "kernel.h"
+#include <circle/memory.h>
 #include <circle/string.h>
 #include <circle/util.h>
 #include <assert.h>
@@ -82,6 +83,9 @@ boolean CKernel::Initialize (void)
 	{
 		bOK = m_Timer.Initialize ();
 	}
+
+	CLogger::Get ()->Write ("kernel", LogNotice, "Machine name: %s", CMachineInfo::Get ()->GetMachineName());
+	CLogger::Get ()->Write ("kernel", LogNotice, "Memory size: %u", CMemorySystem::Get ()->GetMemSize());
 
 	if (bOK)
 	{

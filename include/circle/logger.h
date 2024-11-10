@@ -97,6 +97,7 @@ private:
 
 	TLogEventNotificationHandler *m_pEventNotificationHandler;
 	TLogPanicHandler *m_pPanicHandler;
+	boolean m_bEnabled;
 
 	static CLogger *s_pThis;
 };

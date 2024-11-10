@@ -20,6 +20,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "smimaster";
+
 #include <circle/smimaster.h>
 #include <circle/bcm2835.h>
 #include <circle/memio.h>

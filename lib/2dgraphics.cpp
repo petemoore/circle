@@ -20,6 +20,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "2dgraphics";
+
 #include <circle/2dgraphics.h>
 #include <circle/screen.h>
 #include <circle/bcmpropertytags.h>

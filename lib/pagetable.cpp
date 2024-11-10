@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "pagetable";
+
 #include <circle/pagetable.h>
 #if RASPPI <= 3
 	#include <circle/armv6mmu.h>

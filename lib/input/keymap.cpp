@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "keymap";
+
 #include <circle/input/keymap.h>
 #include <circle/input/keyboardbehaviour.h>
 #include <circle/koptions.h>

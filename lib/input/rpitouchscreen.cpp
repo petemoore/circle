@@ -13,6 +13,9 @@
 // it under the terms of the GNU General Public License version 2 as
 // published by the Free Software Foundation.
 //
+
+static const char From[] = "rpitouchscreen";
+
 #include <circle/input/rpitouchscreen.h>
 #include <circle/bcmpropertytags.h>
 #include <circle/memory.h>

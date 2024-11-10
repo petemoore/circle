@@ -70,6 +70,9 @@
 // SOFTWARE.
 //
 
+
+static const char From[] = "cxa_guard";
+
 #include <circle/multicore.h>
 #include <circle/atomic.h>
 #include <circle/types.h>

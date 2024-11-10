@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "netdevlayer";
+
 #include <circle/net/netdevlayer.h>
 #include <circle/net/phytask.h>
 #include <circle/logger.h>

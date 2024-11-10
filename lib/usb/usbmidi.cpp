@@ -22,6 +22,9 @@
 
 // Refer to "Universal Serial Bus Device Class Specification for MIDI Devices"
 
+
+static const char From[] = "usbmidi";
+
 #include <circle/usb/usbmidi.h>
 #include <circle/devicenameservice.h>
 #include <circle/logger.h>

@@ -19,6 +19,9 @@
 //
 
 /*
+
+static const char From[] = "usbaudiostreaming";
+
 USB audio streaming architecture:
 
 The USB audio streaming support in Circle is based on the following components

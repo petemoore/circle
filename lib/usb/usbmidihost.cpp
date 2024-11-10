@@ -22,6 +22,9 @@
 
 // Refer to "Universal Serial Bus Device Class Specification for MIDI Devices"
 
+
+static const char From[] = "usbmidihost";
+
 #include <circle/usb/usbmidihost.h>
 #include <circle/usb/usbaudio.h>
 #include <circle/usb/usb.h>

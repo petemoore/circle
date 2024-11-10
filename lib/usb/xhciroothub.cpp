@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "xhciroothub";
+
 #include <circle/usb/xhciroothub.h>
 #include <circle/usb/xhcidevice.h>
 #include <circle/logger.h>

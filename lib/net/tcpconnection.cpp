@@ -28,6 +28,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "tcpconnection";
+
 #include <circle/net/tcpconnection.h>
 #include <circle/macros.h>
 #include <circle/util.h>

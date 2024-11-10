@@ -19,6 +19,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "usbcdcgadgetendpoint";
+
 #include <circle/usb/gadget/usbcdcgadgetendpoint.h>
 #include <circle/usb/gadget/usbcdcgadget.h>
 #include <circle/usb/usbserial.h>

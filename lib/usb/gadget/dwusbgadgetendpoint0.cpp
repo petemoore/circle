@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "dwusbgadgetendpoint0";
+
 #include <circle/usb/gadget/dwusbgadgetendpoint0.h>
 #include <circle/usb/gadget/dwusbgadget.h>
 #include <circle/usb/dwhci.h>

@@ -24,6 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+
+static const char From[] = "spimasteraux";
+
 #include <circle/spimasteraux.h>
 #include <circle/bcm2835.h>
 #include <circle/memio.h>

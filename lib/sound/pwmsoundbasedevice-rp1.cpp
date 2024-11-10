@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "pwmsoundbasedevice-rp1";
+
 #include <circle/sound/pwmsoundbasedevice.h>
 #include <circle/devicenameservice.h>
 #include <circle/machineinfo.h>

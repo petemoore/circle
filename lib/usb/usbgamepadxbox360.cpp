@@ -22,6 +22,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "usbgamepadxbox360";
+
 #include <circle/usb/usbgamepadxbox360.h>
 #include <circle/usb/usbhostcontroller.h>
 #include <circle/synchronize.h>

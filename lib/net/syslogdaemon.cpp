@@ -19,6 +19,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "syslogdaemon";
+
 #include <circle/net/syslogdaemon.h>
 #include <circle/net/in.h>
 #include <circle/sched/scheduler.h>

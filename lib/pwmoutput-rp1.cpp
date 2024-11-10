@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "pwmoutput-rp1";
+
 #include <circle/pwmoutput.h>
 #include <circle/bcm2712.h>
 #include <circle/timer.h>

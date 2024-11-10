@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "xhci";
+
 #include <circle/usb/xhcidevice.h>
 #include <circle/bcm2711.h>
 #include <circle/memio.h>
@@ -37,9 +40,6 @@
 #else
 	#define ARM_IRQ_XHCI	(m_nDevice == 0 ? RP1_IRQ_USBHOST0_0 : RP1_IRQ_USBHOST1_0)
 #endif
-
-static const char From[] = "xhci";
-
 CXHCIDevice::CXHCIDevice (CInterruptSystem *pInterruptSystem, CTimer *pTimer, boolean bPlugAndPlay,
 			  unsigned nDevice, CXHCISharedMemAllocator *pSharedMemAllocator)
 :	CUSBHostController (bPlugAndPlay),

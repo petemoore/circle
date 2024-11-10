@@ -21,6 +21,7 @@
 #define _circle_memio_h
 
 #include <circle/types.h>
+#include <circle/logger.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,36 +30,48 @@ extern "C" {
 /// \brief Read 8-bit value from MMIO address
 static inline u8 read8 (uintptr nAddress)
 {
-	return *(u8 volatile *) nAddress;
+	u8 result;
+	result = *(u8 volatile *) nAddress;
+	LOGNOTE ("read8 [%x] = %x", result);
+	return result;
 }
 
 /// \brief Write 8-bit value to MMIO address
 static inline void write8 (uintptr nAddress, u8 uchValue)
 {
+	LOGNOTE ("write8 [%x] = %x", nAddress, uchValue);
 	*(u8 volatile *) nAddress = uchValue;
 }
 
 /// \brief Read 16-bit value from MMIO address
 static inline u16 read16 (uintptr nAddress)
 {
-	return *(u16 volatile *) nAddress;
+	u16 result;
+	result = *(u16 volatile *) nAddress;
+	LOGNOTE ("read16 [%x] = %x", nAddress, result);
+	return result;
 }
 
 /// \brief Write 16-bit value to MMIO address
 static inline void write16 (uintptr nAddress, u16 usValue)
 {
+	LOGNOTE ("write16 [%x] = %x", nAddress, usValue);
 	*(u16 volatile *) nAddress = usValue;
 }
 
 /// \brief Read 32-bit value from MMIO address
 static inline u32 read32 (uintptr nAddress)
 {
-	return *(u32 volatile *) nAddress;
+	u32 result;
+    result = *(u32 volatile *) nAddress;
+	LOGNOTE ("read32 [%x] = %x", nAddress, result);
+	return result;
 }
 
 /// \brief Write 32-bit value to MMIO address
 static inline void write32 (uintptr nAddress, u32 nValue)
 {
+	LOGNOTE ("write32 [%x] = %x", nAddress, nValue);
 	*(u32 volatile *) nAddress = nValue;
 }
 

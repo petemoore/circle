@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "sndhdmi";
+
 #include <circle/sound/hdmisoundbasedevice.h>
 #include <circle/devicenameservice.h>
 #include <circle/bcm2835.h>
@@ -119,7 +122,6 @@ REG (TxPhyPowerDownControl, UNUSED, UNUSED, ARM_PHY_BASE, 0x04, 0, 0);
 #endif
 
 static const char DeviceName[] = "sndhdmi";
-static const char From[] = "sndhdmi";
 
 CHDMISoundBaseDevice::CHDMISoundBaseDevice (CInterruptSystem *pInterrupt,
 					    unsigned nSampleRate,

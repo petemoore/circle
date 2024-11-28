@@ -177,6 +177,11 @@ void CScreenDevice::SetCursorBlock (boolean bCursorBlock)
 	m_pTerminal->SetCursorBlock (bCursorBlock);
 }
 
+void CScreenDevice::Update (unsigned nMillis)
+{
+	m_pTerminal->Update (nMillis);
+}
+
 #else	// #ifndef SCREEN_HEADLESS
 
 static const char DevicePrefix[] = "tty";
@@ -266,6 +271,10 @@ void CScreenDevice::Rotor (unsigned nIndex, unsigned nCount)
 }
 
 void CScreenDevice::SetCursorBlock (boolean bCursorBlock)
+{
+}
+
+void CScreenDevice::Update (unsigned nMillis)
 {
 }
 

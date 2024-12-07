@@ -93,15 +93,9 @@ boolean CKernel::Initialize (void)
 
 TShutdownMode CKernel::Run (void)
 {
-	// unsigned long long arm_reg_value;
-
 	m_Logger.Write (FromKernel, LogNotice, "Compile time: " __DATE__ " " __TIME__);
 
 	m_Logger.Write (FromKernel, LogNotice, "Please attach an USB keyboard, if not already done!");
-
-	// this should trigger an exception
-	// asm volatile ("mrs %0, sp_el1" : "=r" (arm_reg_value));
-	// m_Logger.Write (FromKernel, LogNotice, "sp_el1: %016lx", arm_reg_value);
 
 	// Turn on the block cursor
 	//m_Screen.SetCursorBlock(TRUE);

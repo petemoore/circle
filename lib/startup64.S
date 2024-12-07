@@ -25,7 +25,13 @@
  */
 #include <circle/sysconfig.h>
 
-	.macro armv8_switch_to_el1_m, xreg1, xreg2
+	.macro preserve armreg, xreg3, xreg4
+	ldr \xreg3, =\armreg\()_val
+	mrs \xreg4, \armreg
+	str \xreg4, [\xreg3]
+	.endm
+
+	.macro armv8_switch_to_el1_m, xreg1, xreg2, xreg3, xreg4
 
 	/* Initialize Generic Timers */
 	mrs	\xreg1, cnthctl_el2
@@ -66,10 +72,46 @@
 	msr	spsr_el2, \xreg1	/* EL1_SP0 | D | A | I | F */
 	adr	\xreg1, 1f
 	msr	elr_el2, \xreg1
+
+	preserve cnthctl_el2  \xreg3, \xreg4
+	preserve cntvoff_el2  \xreg3, \xreg4
+	preserve cptr_el2     \xreg3, \xreg4
+	preserve elr_el2      \xreg3, \xreg4
+	preserve hcr_el2      \xreg3, \xreg4
+	preserve hstr_el2     \xreg3, \xreg4
+	preserve spsr_el2     \xreg3, \xreg4
+	preserve vbar_el2     \xreg3, \xreg4
+	preserve vmpidr_el2   \xreg3, \xreg4
+	preserve vpidr_el2    \xreg3, \xreg4
+
 	eret
 1:
 
 	.endm
+
+	.section .data              // Use the .data section for writable global data
+	.align 3
+	.globl cnthctl_el2_val
+	.globl cntvoff_el2_val
+	.globl cptr_el2_val
+	.globl elr_el2_val
+	.globl hcr_el2_val
+	.globl hstr_el2_val
+	.globl spsr_el2_val
+	.globl vbar_el2_val
+	.globl vmpidr_el2_val
+	.globl vpidr_el2_val
+
+cnthctl_el2_val: .space 8
+cntvoff_el2_val: .space 8
+cptr_el2_val: .space 8
+elr_el2_val: .space 8
+hcr_el2_val: .space 8
+hstr_el2_val: .space 8
+spsr_el2_val: .space 8
+vbar_el2_val: .space 8
+vmpidr_el2_val: .space 8
+vpidr_el2_val: .space 8
 
 	.section .init
 
@@ -86,7 +128,7 @@ _start:					/* normally entered from armstub8 in EL2 after boot */
 	ldr	x0, =VectorTable	/* init exception vector table for EL2 */
 	msr	vbar_el2, x0
 
-	armv8_switch_to_el1_m x0, x1
+	armv8_switch_to_el1_m x0, x1, x2, x3
 
 1:	ldr	x0, =MEM_KERNEL_STACK	/* main thread runs in EL1t and uses sp_el0 */
 	mov	sp, x0			/* init its stack */
@@ -117,7 +159,7 @@ _start_secondary:			/* normally entered from armstub8 in EL2 after boot */
 	add	x0, x0, x1
 	msr	sp_el1, x0		/* init their stack */
 
-	armv8_switch_to_el1_m x0, x1
+	armv8_switch_to_el1_m x0, x1, x2, x3
 
 1:	mov	x1, #KERNEL_STACK_SIZE	/* calculate kernel stack offset for core */
 	mul	x1, x1, x2

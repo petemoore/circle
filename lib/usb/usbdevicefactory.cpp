@@ -31,6 +31,7 @@ static const char From[] = "usbdevicefactory";
 // for factory
 #include <circle/usb/usbstandardhub.h>
 #include <circle/usb/usbmassdevice.h>
+#include <circle/usb/usbfloppydevice.h>
 #include <circle/usb/usbkeyboard.h>
 #include <circle/usb/usbmouse.h>
 #include <circle/usb/usbgamepadstandard.h>
@@ -80,6 +81,11 @@ CUSBFunction *CUSBDeviceFactory::GetDevice (CUSBFunction *pParent, CString *pNam
 	else if (pName->Compare ("int8-6-50") == 0)
 	{
 		pResult = new CUSBBulkOnlyMassStorageDevice (pParent);
+	}
+	else if (   pName->Compare ("int8-4-0") == 0
+		 || pName->Compare ("int8-4-1") == 0)
+	{
+		pResult = new CUSBFloppyDiskDevice (pParent);
 	}
 #endif
 #ifndef EXCLUDE_USB_KEYB

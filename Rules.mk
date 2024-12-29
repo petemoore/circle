@@ -141,6 +141,14 @@ endif
 	@echo "  CPP   $@"
 	@$(CPP) $(CPPFLAGS) -c -o $@ $<
 
+%.S.i: %.S
+	@echo "  PRE   $@"
+	@$(CPP) -P -E -x assembler-with-cpp $(CPPFLAGS) -o $@ $<
+
+%.cpp.i: %.cpp
+	@echo "  PRE   $@"
+	@$(CPP) -P -E $(CPPFLAGS) -o $@ $<
+
 %.d: %.S
 	@$(AS) $(AFLAGS) -M -MG -MT $*.o -MT $@ -MF $@ $<
 
@@ -164,7 +172,7 @@ $(TARGET).img: $(OBJS) $(LIBS) $(CIRCLEHOME)/circle.ld
 
 clean:
 	@echo "  CLEAN " `pwd`
-	@rm -f *.d *.o *.a *.elf *.lst *.img *.hex *.cir *.map *~ $(EXTRACLEAN)
+	@rm -f *.d *.o *.a *.i *.elf *.lst *.img *.hex *.cir *.map *~ $(EXTRACLEAN)
 
 ifneq ($(strip $(SDCARD)),)
 install: $(TARGET).img

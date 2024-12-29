@@ -81,6 +81,7 @@ $RECYCLE.BIN/
 *.img
 *.lst
 *.map
+*.i
 Config.mk
 Config2.mk
 

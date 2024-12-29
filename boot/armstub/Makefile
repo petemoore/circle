@@ -22,10 +22,10 @@ $(TARGET64).bin: armstub8.S
 	$(PREFIX64)objcopy $(TARGET64).elf -O binary $(TARGET64).bin
 
 $(TARGET).S.i: armstub7.S
-	$(PREFIX)gcc -P -march=armv7-a -DGIC=1 -DBCM2710=1 -DBCM2711=1 -E -x assembler-with-cpp -o $(TARGET).S.i armstub7.S
+	$(PREFIX)gcc -P -march=armv7-a -DGIC=1 -DBCM2710=1 -DBCM2711=1 -E -C -x assembler-with-cpp -o $(TARGET).S.i armstub7.S
 
 $(TARGET64).S.i: armstub8.S
-	$(PREFIX64)gcc -P -DGIC=1 -E -x assembler-with-cpp -o $(TARGET64).S.i armstub8.S
+	$(PREFIX64)gcc -P -DGIC=1 -E -C -x assembler-with-cpp -o $(TARGET64).S.i armstub8.S
 
 clean:
 	rm -f *.o *.i *.elf *.bin *.lst

@@ -211,11 +211,11 @@ endif
 
 %.S.i: %.S
 	@echo "  PRE   $@"
-	@$(CPP) -P -E -x assembler-with-cpp $(CPPFLAGS) -o $@ $<
+	@$(CPP) -P -E -C -x assembler-with-cpp $(CPPFLAGS) -o $@ $<
 
 %.cpp.i: %.cpp
 	@echo "  PRE   $@"
-	@$(CPP) -P -E $(CPPFLAGS) -o $@ $<
+	@$(CPP) -P -E -C $(CPPFLAGS) -o $@ $<
 
 %.d: %.S
 	@$(AS) $(AFLAGS) -M -MG -MT $*.o -MT $@ -MF $@ $<

@@ -62,10 +62,12 @@ bootloader64:
 .PHONY: armstub
 armstub:
 	make -C armstub armstub7-rpi4.bin
+	make -C armstub armstub7-rpi4.S.i
 	cp armstub/armstub7-rpi4.bin .
 
 armstub64:
 	make -C armstub armstub8-rpi4.bin
+	make -C armstub armstub8-rpi4.S.i
 	cp armstub/armstub8-rpi4.bin .
 
 ifneq ($(strip $(SDCARD)),)

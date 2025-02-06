@@ -24,6 +24,7 @@ static const char From[] = "translationtable64";
 #include <circle/synchronize.h>
 #include <circle/sysconfig.h>
 #include <circle/alloc.h>
+#include <circle/logger.h>
 #include <circle/util.h>
 #include <assert.h>
 
@@ -90,6 +91,10 @@ CTranslationTable::CTranslationTable (size_t nMemSize)
 		pDesc->UXNTable	    = 0;
 		pDesc->APTable	    = AP_TABLE_ALL_ACCESS;
 		pDesc->NSTable	    = 0;
+
+		u64 rawValue = *reinterpret_cast<u64 *>(pDesc);
+		CLogger::Get()->Write("mmu", LogNotice, "MMU Level 2 Descriptor Address: 0x%p, Value: 0x%016lx",
+                          pDesc, rawValue);
 	}
 
 	DataSyncBarrier ();
@@ -156,6 +161,9 @@ TARMV8MMU_LEVEL3_DESCRIPTOR *CTranslationTable::CreateLevel3Table (uintptr nBase
 		}
 
 		nBaseAddress += ARMV8MMU_LEVEL3_PAGE_SIZE;
+		u64 rawValue = *reinterpret_cast<u64 *>(pDesc);
+		CLogger::Get()->Write("mmu", LogNotice, "MMU Level 3 Descriptor Address: 0x%p, Value: 0x%016lx",
+                          pDesc, rawValue);
 	}
 
 	return pTable;

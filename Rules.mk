@@ -217,6 +217,9 @@ endif
 %.d: %.cpp
 	@$(CPP) $(CPPFLAGS) -M -MG -MT $*.o -MT $@ -MF $@ $<
 
+%.i: %.cpp
+	@$(CPP) $(CPPFLAGS) -E -P -o $@ $<
+
 $(TARGET).img: $(OBJS) $(LIBS) $(CIRCLEHOME)/circle.ld
 	@echo "  LD    $(TARGET).elf"
 ifneq ($(strip $(CLANG)),1)

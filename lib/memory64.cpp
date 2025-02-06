@@ -24,6 +24,7 @@ static const char From[] = "memory64";
 #include <circle/bcmpropertytags.h>
 #include <circle/machineinfo.h>
 #include <circle/alloc.h>
+#include <circle/logger.h>
 #include <circle/spinlock.h>
 #include <circle/synchronize.h>
 #include <circle/sysconfig.h>
@@ -53,14 +54,23 @@ CMemorySystem::CMemorySystem (boolean bEnableMMU)
 	{
 		TagMemory.nBaseAddress = 0;
 		TagMemory.nSize = ARM_MEM_SIZE;
+		CLogger::Get()->Write("memory64", LogNotice, "ARM memory size hardcoded: 0x%016lx",
+                          TagMemory.nSize);
+	} else {
+		CLogger::Get()->Write("memory64", LogNotice, "ARM memory size retrieved from property mailbox call: 0x%016lx",
+                          TagMemory.nSize);
 	}
 
 	assert (TagMemory.nBaseAddress == 0);
 	m_nMemSize = TagMemory.nSize;
 
+	// to calculate "variable" size of:
+	//      00900000	variable	Heap allocator		"new" and malloc()
 	size_t nBlockReserve = m_nMemSize - MEM_HEAP_START - PAGE_RESERVE;
 	m_HeapLow.Setup (MEM_HEAP_START, nBlockReserve, 0x40000);
 
+	// address range for
+	//      ????????	16 MByte	Page allocator		palloc()
 	m_Pager.Setup (MEM_HEAP_START + nBlockReserve, PAGE_RESERVE);
 
 	if (m_bEnableMMU)

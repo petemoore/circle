@@ -32,7 +32,7 @@ static inline u8 read8 (uintptr nAddress)
 {
 	u8 result;
 	result = *(u8 volatile *) nAddress;
-	LOGNOTE ("read8 [%x] = %x", result);
+	LOGNOTE ("read8 [%x] = %x", nAddress, result);
 	return result;
 }
 

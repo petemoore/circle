@@ -26,6 +26,7 @@ static const char From[] = "bcmpropertytags";
 #include <circle/bcm2835.h>
 #include <circle/memory.h>
 #include <circle/macros.h>
+#include <circle/logger.h>
 #include <assert.h>
 
 struct TPropertyBuffer
@@ -87,6 +88,16 @@ boolean CBcmPropertyTags::GetTags (void *pTags, unsigned nTagsSize)
 	pBuffer->nCode = CODE_REQUEST;
 	memcpy (pBuffer->Tags, pTags, nTagsSize);
 
+	// Log the copied 32-bit values
+	CLogger::Get()->Write("bcm-tags", LogNotice, "Copied %u bytes to pBuffer->Tags at address 0x%x:", nTagsSize, (void*)pBuffer->Tags);
+
+	const u32* tagData = static_cast<const u32*>(pTags);  // Cast void* to u32* for 32-bit access
+	size_t numWords = nTagsSize / sizeof(u32);  // Number of 32-bit words
+
+	for (size_t i = 0; i < numWords; ++i) {
+	    CLogger::Get()->Write("bcm-tags", LogNotice, "pTags[0x%lx] = 0x%08x", i * 4, tagData[i]);
+	}
+
 	u32 *pEndTag = (u32 *) (pBuffer->Tags + nTagsSize);
 	*pEndTag = PROPTAG_END;
 
@@ -106,6 +117,16 @@ boolean CBcmPropertyTags::GetTags (void *pTags, unsigned nTagsSize)
 	}
 
 	memcpy (pTags, pBuffer->Tags, nTagsSize);
+
+	// Log the modified 32-bit values after copying back
+	CLogger::Get()->Write("bcm-tags", LogNotice, "Copied back %u bytes to pTags at address 0x%x:", nTagsSize, (void*)pTags);
+
+	const u32* modifiedTagData = static_cast<const u32*>(pTags);  // Cast void* to u32* for 32-bit access
+	numWords = nTagsSize / sizeof(u32);  // Number of 32-bit words
+
+	for (size_t i = 0; i < numWords; ++i) {
+	    CLogger::Get()->Write("bcm-tags", LogNotice, "pTags[0x%lx] = 0x%08x (after VC modifications)", i * 4, modifiedTagData[i]);
+	}
 
 	return TRUE;
 }

@@ -1,0 +1,1051 @@
+# 0 "interrupt.cpp"
+# 1 "/Users/pmoore/git/circle/lib//"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "interrupt.cpp"
+# 20 "interrupt.cpp"
+# 1 "../include/circle/interrupt.h" 1
+# 23 "../include/circle/interrupt.h"
+# 1 "../include/circle/bcm2835int.h" 1
+# 24 "../include/circle/interrupt.h" 2
+# 1 "../include/circle/exceptionstub.h" 1
+# 23 "../include/circle/exceptionstub.h"
+# 1 "../include/circle/macros.h" 1
+# 24 "../include/circle/exceptionstub.h" 2
+# 1 "../include/circle/types.h" 1
+# 23 "../include/circle/types.h"
+# 1 "../include/assert.h" 1
+# 26 "../include/assert.h"
+extern "C" {
+
+
+
+
+
+ void assertion_failed (const char *pExpr, const char *pFile, unsigned nLine) __attribute__ ((noreturn));
+# 46 "../include/assert.h"
+}
+# 24 "../include/circle/types.h" 2
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+
+typedef signed char s8;
+typedef signed short s16;
+typedef signed int s32;
+# 43 "../include/circle/types.h"
+typedef unsigned long u64;
+typedef signed long s64;
+
+typedef long intptr;
+typedef unsigned long uintptr;
+
+typedef unsigned long size_t;
+typedef long ssize_t;
+
+
+
+typedef bool boolean;
+
+
+
+
+
+
+
+static_assert (sizeof (boolean) == 1, "sizeof (boolean) == 1");
+# 25 "../include/circle/exceptionstub.h" 2
+
+
+extern "C" {
+# 91 "../include/circle/exceptionstub.h"
+struct TVectorTable
+{
+ struct
+ {
+  u32 Branch;
+  u32 Dummy[31];
+ }
+ Vector[16];
+}
+__attribute__ ((packed));
+
+struct TAbortFrame
+{
+ u64 esr_el1;
+ u64 spsr_el1;
+ u64 x30;
+ u64 elr_el1;
+ u64 sp_el0;
+ u64 sp_el1;
+ u64 far_el1;
+ u64 unused;
+}
+__attribute__ ((packed));
+
+void ExceptionHandler (u64 nException, TAbortFrame *pFrame);
+void InterruptHandler (void);
+# 138 "../include/circle/exceptionstub.h"
+typedef void TFIQHandler (void *pParam);
+
+struct TFIQData
+{
+ TFIQHandler *pHandler;
+ void *pParam;
+ u32 nFIQNumber;
+}
+__attribute__ ((packed));
+
+extern TFIQData FIQData;
+
+extern uintptr IRQReturnAddress;
+
+
+}
+# 25 "../include/circle/interrupt.h" 2
+
+
+typedef void TIRQHandler (void *pParam);
+
+class CInterruptSystem
+{
+public:
+ CInterruptSystem (void);
+ ~CInterruptSystem (void);
+
+ void Destructor (void);
+
+ boolean Initialize (void);
+
+ void ConnectIRQ (unsigned nIRQ, TIRQHandler *pHandler, void *pParam);
+ void DisconnectIRQ (unsigned nIRQ);
+
+ void ConnectFIQ (unsigned nFIQ, TFIQHandler *pHandler, void *pParam);
+ void DisconnectFIQ (void);
+
+ static void EnableIRQ (unsigned nIRQ);
+ static void DisableIRQ (unsigned nIRQ);
+
+ static void EnableFIQ (unsigned nFIQ);
+ static void DisableFIQ (void);
+
+ static CInterruptSystem *Get (void);
+
+ static void InterruptHandler (void);
+# 64 "../include/circle/interrupt.h"
+private:
+ boolean CallIRQHandler (unsigned nIRQ);
+
+private:
+ TIRQHandler *m_apIRQHandler[(32 * 2 + 8 + 12)];
+ void *m_pParam[(32 * 2 + 8 + 12)];
+
+ static CInterruptSystem *s_pThis;
+};
+# 21 "interrupt.cpp" 2
+# 1 "../include/circle/synchronize.h" 1
+# 24 "../include/circle/synchronize.h"
+# 1 "../include/circle/synchronize64.h" 1
+# 31 "../include/circle/synchronize64.h"
+extern "C" {
+# 41 "../include/circle/synchronize64.h"
+unsigned CurrentExecutionLevel (void);
+# 55 "../include/circle/synchronize64.h"
+void EnterCritical (unsigned nTargetLevel = 1);
+void LeaveCritical (void);
+# 68 "../include/circle/synchronize64.h"
+void InvalidateDataCache (void) __attribute__ ((optimize (3)));
+void InvalidateDataCacheL1Only (void) __attribute__ ((optimize (3)));
+void CleanDataCache (void) __attribute__ ((optimize (3)));
+
+void InvalidateDataCacheRange (u64 nAddress, u64 nLength) __attribute__ ((optimize (3)));
+void CleanDataCacheRange (u64 nAddress, u64 nLength) __attribute__ ((optimize (3)));
+void CleanAndInvalidateDataCacheRange (u64 nAddress, u64 nLength) __attribute__ ((optimize (3)));
+
+void SyncDataAndInstructionCache (void);
+# 114 "../include/circle/synchronize64.h"
+}
+# 25 "../include/circle/synchronize.h" 2
+# 22 "interrupt.cpp" 2
+# 1 "../include/circle/multicore.h" 1
+# 23 "../include/circle/multicore.h"
+# 1 "../include/circle/sysconfig.h" 1
+# 502 "../include/circle/sysconfig.h"
+# 1 "../include/circle/memorymap.h" 1
+# 26 "../include/circle/memorymap.h"
+# 1 "../include/circle/memorymap64.h" 1
+# 27 "../include/circle/memorymap.h" 2
+# 503 "../include/circle/sysconfig.h" 2
+# 24 "../include/circle/multicore.h" 2
+# 23 "interrupt.cpp" 2
+# 1 "../include/circle/bcm2835.h" 1
+# 24 "interrupt.cpp" 2
+# 1 "../include/circle/bcm2836.h" 1
+# 25 "interrupt.cpp" 2
+# 1 "../include/circle/memio.h" 1
+# 24 "../include/circle/memio.h"
+# 1 "../include/circle/logger.h" 1
+# 23 "../include/circle/logger.h"
+# 1 "../include/circle/device.h" 1
+# 23 "../include/circle/device.h"
+# 1 "../include/circle/ptrlist.h" 1
+# 23 "../include/circle/ptrlist.h"
+struct TPtrListElement;
+
+class CPtrList
+{
+public:
+ CPtrList (void);
+ ~CPtrList (void);
+
+
+ TPtrListElement *GetFirst (void) const;
+
+
+
+ TPtrListElement *GetNext (TPtrListElement *pElement) const;
+
+
+
+ static void *GetPtr (TPtrListElement *pElement);
+
+
+
+
+ void InsertBefore (TPtrListElement *pAfter, void *pPtr);
+
+
+
+
+ void InsertAfter (TPtrListElement *pBefore, void *pPtr);
+
+
+
+ void Remove (TPtrListElement *pElement);
+
+
+
+
+ TPtrListElement *Find (void *pPtr) const;
+
+private:
+ TPtrListElement *m_pFirst;
+};
+# 24 "../include/circle/device.h" 2
+
+
+class CDevice;
+
+typedef void TDeviceRemovedHandler (CDevice *pDevice, void *pContext);
+
+class CDevice
+{
+public:
+ CDevice (void);
+ virtual ~CDevice (void);
+
+
+
+
+ virtual int Read (void *pBuffer, size_t nCount);
+
+
+
+
+ virtual int Write (const void *pBuffer, size_t nCount);
+
+
+
+
+ virtual u64 Seek (u64 ullOffset);
+
+
+
+ virtual u64 GetSize (void) const;
+
+
+
+
+ virtual int IOCtl (unsigned long ulCmd, void *pData);
+
+
+ virtual boolean RemoveDevice (void);
+
+public:
+ typedef void *TRegistrationHandle;
+
+
+
+
+
+
+ TRegistrationHandle RegisterRemovedHandler (TDeviceRemovedHandler *pHandler,
+          void *pContext = 0);
+
+
+ void UnregisterRemovedHandler (TRegistrationHandle hRegistration);
+
+private:
+ CPtrList m_RemovedHandlerList;
+};
+# 24 "../include/circle/logger.h" 2
+# 1 "../include/circle/timer.h" 1
+# 24 "../include/circle/timer.h"
+# 1 "../include/circle/string.h" 1
+# 23 "../include/circle/string.h"
+# 1 "../include/circle/stdarg.h" 1
+# 26 "../include/circle/stdarg.h"
+typedef __builtin_va_list va_list;
+# 24 "../include/circle/string.h" 2
+
+
+class CString
+{
+public:
+ CString (void);
+ CString (const char *pString);
+ CString (const CString &rString);
+ CString (CString &&rrString);
+ virtual ~CString (void);
+
+ operator const char *(void) const;
+ const char *operator = (const char *pString);
+ CString &operator = (const CString &rString);
+ CString &operator = (CString &&rrString);
+
+ CString &operator += (const char chChar);
+ CString &operator += (const char *pString);
+ CString &operator += (const CString &rString);
+
+ const char* c_str (void) const;
+
+ size_t GetLength (void) const;
+
+ void Append (const char *pString);
+ void Append (const char chChar);
+ int Compare (const char *pString) const;
+ int Find (char chChar) const;
+
+ int Replace (const char *pOld, const char *pNew);
+
+ void Format (const char *pFormat, ...);
+ void FormatV (const char *pFormat, va_list Args);
+
+private:
+ void PutChar (char chChar, size_t nCount = 1);
+ void PutString (const char *pString);
+ void ReserveSpace (size_t nSpace);
+
+ static char *ntoa (char *pDest, unsigned long ulNumber, unsigned nBase, boolean bUpcase);
+
+ static char *lltoa (char *pDest, unsigned long long ullNumber, unsigned nBase, boolean bUpcase);
+
+ static char *ftoa (char *pDest, double fNumber, unsigned nPrecision);
+
+private:
+ char *m_pBuffer;
+ unsigned m_nSize;
+ char *m_pInPtr;
+};
+# 25 "../include/circle/timer.h" 2
+
+
+# 1 "../include/circle/spinlock.h" 1
+# 54 "../include/circle/spinlock.h"
+class CSpinLock
+{
+public:
+ CSpinLock (unsigned nTargetLevel = 1)
+ : m_nTargetLevel (nTargetLevel)
+ {
+ }
+
+ void Acquire (void)
+ {
+  if (m_nTargetLevel >= 1)
+  {
+   EnterCritical (m_nTargetLevel);
+  }
+ }
+
+ void Release (void)
+ {
+  if (m_nTargetLevel >= 1)
+  {
+   LeaveCritical ();
+  }
+ }
+
+private:
+ unsigned m_nTargetLevel;
+};
+# 28 "../include/circle/timer.h" 2
+
+
+
+
+
+
+typedef uintptr TKernelTimerHandle;
+
+typedef void TKernelTimerHandler (TKernelTimerHandle hTimer, void *pParam, void *pContext);
+
+
+
+
+typedef boolean TUpdateTimeHandler (unsigned nNewTime, unsigned nOldTime);
+
+typedef void TPeriodicTimerHandler (void);
+
+extern "C" void DelayLoop (unsigned nCount);
+
+class CTimer
+{
+public:
+ CTimer (CInterruptSystem *pInterruptSystem);
+ ~CTimer (void);
+
+ boolean Initialize (void);
+
+
+
+
+ boolean SetTimeZone (int nMinutesDiff);
+
+ int GetTimeZone (void) const;
+
+
+
+
+ boolean SetTime (unsigned nTime, boolean bLocal = true);
+
+
+ static unsigned GetClockTicks (void);
+
+
+ static u64 GetClockTicks64 (void);
+
+
+
+ unsigned GetTicks (void) const;
+
+ unsigned GetUptime (void) const;
+
+
+
+
+ unsigned GetTime (void) const;
+
+ unsigned GetLocalTime (void) const { return GetTime (); }
+
+
+
+
+ boolean GetLocalTime (unsigned *pSeconds, unsigned *pMicroSeconds);
+
+
+
+ unsigned GetUniversalTime (void) const;
+
+
+
+
+
+ boolean GetUniversalTime (unsigned *pSeconds, unsigned *pMicroSeconds);
+
+
+
+
+ CString *GetTimeString (void);
+# 113 "../include/circle/timer.h"
+ TKernelTimerHandle StartKernelTimer (unsigned nDelay,
+          TKernelTimerHandler *pHandler,
+          void *pParam = 0,
+          void *pContext = 0);
+
+
+
+ void CancelKernelTimer (TKernelTimerHandle hTimer);
+
+
+
+ void MsDelay (unsigned nMilliSeconds) { SimpleMsDelay (nMilliSeconds); }
+
+
+ void usDelay (unsigned nMicroSeconds) { SimpleusDelay (nMicroSeconds); }
+
+
+ void nsDelay (unsigned nNanoSeconds) { DelayLoop (m_nusDelay * nNanoSeconds / 1000); }
+
+
+
+ static CTimer *Get (void);
+
+
+
+ static void SimpleMsDelay (unsigned nMilliSeconds);
+
+
+ static void SimpleusDelay (unsigned nMicroSeconds);
+
+
+ void RegisterUpdateTimeHandler (TUpdateTimeHandler *pHandler);
+
+
+ void RegisterPeriodicHandler (TPeriodicTimerHandler *pHandler);
+
+private:
+ void PollKernelTimers (void);
+
+ void InterruptHandler (void);
+ static void InterruptHandler (void *pParam);
+
+ void TuneMsDelay (void);
+
+public:
+ static int IsLeapYear (unsigned nYear);
+ static unsigned GetDaysOfMonth (unsigned nMonth, unsigned nYear);
+
+private:
+ CInterruptSystem *m_pInterruptSystem;
+
+
+ u32 m_nClockTicksPerHZTick;
+
+
+ volatile unsigned m_nTicks;
+ volatile unsigned m_nUptime;
+ volatile unsigned m_nTime;
+ CSpinLock m_TimeSpinLock;
+
+ int m_nMinutesDiff;
+
+ CPtrList m_KernelTimerList;
+ CSpinLock m_KernelTimerSpinLock;
+
+ unsigned m_nMsDelay;
+ unsigned m_nusDelay;
+
+ TUpdateTimeHandler *m_pUpdateTimeHandler;
+
+
+ TPeriodicTimerHandler *m_pPeriodicHandler[4];
+ volatile unsigned m_nPeriodicHandlers;
+
+ static CTimer *s_pThis;
+
+ static const unsigned s_nDaysOfMonth[12];
+ static const char *s_pMonthName[12];
+};
+# 25 "../include/circle/logger.h" 2
+
+
+# 1 "../include/circle/time.h" 1
+# 26 "../include/circle/time.h"
+typedef signed long time_t;
+
+class CTime
+{
+public:
+ CTime (void);
+ CTime (const CTime &rSource);
+ ~CTime (void);
+
+
+ void Set (time_t Time);
+
+
+
+
+
+ boolean SetTime (unsigned nHours, unsigned nMinutes, unsigned nSeconds);
+
+
+
+
+
+ boolean SetDate (unsigned nMonthDay, unsigned nMonth, unsigned nYear);
+
+
+ time_t Get (void) const;
+
+
+ unsigned GetSeconds (void) const;
+
+ unsigned GetMinutes (void) const;
+
+ unsigned GetHours (void) const;
+
+ unsigned GetMonthDay (void) const;
+
+ unsigned GetMonth (void) const;
+
+ unsigned GetYear (void) const;
+
+ unsigned GetWeekDay (void) const;
+
+
+ const char *GetString (void);
+
+private:
+ static boolean IsLeapYear (unsigned nYear);
+ static unsigned GetDaysOfMonth (unsigned nMonth, unsigned nYear);
+
+private:
+
+ unsigned m_nSeconds;
+ unsigned m_nMinutes;
+ unsigned m_nHours;
+ unsigned m_nMonthDay;
+ unsigned m_nMonth;
+ unsigned m_nYear;
+ unsigned m_nWeekDay;
+
+ CString m_String;
+
+ static const unsigned s_nDaysOfMonth[];
+ static const char *s_pMonthName[];
+ static const char *s_pDaysOfWeek[];
+};
+# 28 "../include/circle/logger.h" 2
+# 36 "../include/circle/logger.h"
+enum TLogSeverity
+{
+ LogPanic,
+ LogError,
+ LogWarning,
+ LogNotice,
+ LogDebug
+};
+
+struct TLogEvent;
+
+typedef void TLogEventNotificationHandler (void);
+typedef void TLogPanicHandler (void);
+
+class CLogger
+{
+public:
+
+
+
+ CLogger (unsigned nLogLevel, CTimer *pTimer = 0, boolean bOverwriteOldest = true);
+
+ ~CLogger (void);
+
+
+ boolean Initialize (CDevice *pTarget);
+
+
+ void SetNewTarget (CDevice *pTarget);
+
+
+
+
+ void Write (const char *pSource, TLogSeverity Severity, const char *pMessage, ...);
+
+
+
+
+
+ void WriteV (const char *pSource, TLogSeverity Severity, const char *pMessage, va_list Args);
+
+
+ void WriteNoAlloc (const char *pSource, TLogSeverity Severity, const char *pMessage);
+
+
+
+
+
+
+ int Read (void *pBuffer, unsigned nCount, boolean bClear = true);
+# 95 "../include/circle/logger.h"
+ boolean ReadEvent (TLogSeverity *pSeverity, char *pSource, char *pMessage,
+      time_t *pTime, unsigned *pHundredthTime, int *pTimeZone);
+
+
+ void RegisterEventNotificationHandler (TLogEventNotificationHandler *pHandler);
+
+ void RegisterPanicHandler (TLogPanicHandler *pHandler);
+
+
+
+ static CLogger *Get (void);
+
+private:
+ void Write (const char *pString);
+
+ void WriteEvent (const char *pSource, TLogSeverity Severity, const char *pMessage);
+
+private:
+ unsigned m_nLogLevel;
+ CTimer *m_pTimer;
+ boolean m_bOverwriteOldest;
+
+ CDevice *m_pTarget;
+
+ char *m_pBuffer;
+ unsigned m_nInPtr;
+ unsigned m_nOutPtr;
+ CSpinLock m_SpinLock;
+
+ TLogEvent *m_pEventQueue[50];
+ unsigned m_nEventInPtr;
+ unsigned m_nEventOutPtr;
+ CSpinLock m_EventSpinLock;
+
+ TLogEventNotificationHandler *m_pEventNotificationHandler;
+ TLogPanicHandler *m_pPanicHandler;
+
+ static CLogger *s_pThis;
+};
+# 25 "../include/circle/memio.h" 2
+
+
+extern "C" {
+
+
+
+static inline u8 read8 (uintptr nAddress)
+{
+ return *(u8 volatile *) nAddress;
+}
+
+
+static inline void write8 (uintptr nAddress, u8 uchValue)
+{
+ *(u8 volatile *) nAddress = uchValue;
+}
+
+
+static inline u16 read16 (uintptr nAddress)
+{
+ return *(u16 volatile *) nAddress;
+}
+
+
+static inline void write16 (uintptr nAddress, u16 usValue)
+{
+ *(u16 volatile *) nAddress = usValue;
+}
+
+
+static inline u32 read32 (uintptr nAddress)
+{
+ return *(u32 volatile *) nAddress;
+}
+
+
+static inline void write32 (uintptr nAddress, u32 nValue)
+{
+ *(u32 volatile *) nAddress = nValue;
+}
+
+static inline void pete_write32 (uintptr nAddress, u32 nValue)
+{
+ CLogger::Get ()->Write ("mmio", LogNotice, "write32 [0x%X]=0x%X", nAddress, nValue);
+ *(u32 volatile *) nAddress = nValue;
+}
+
+
+}
+# 26 "interrupt.cpp" 2
+# 49 "interrupt.cpp"
+CInterruptSystem *CInterruptSystem::s_pThis = 0;
+
+CInterruptSystem::CInterruptSystem (void)
+{
+ if (s_pThis != 0)
+ {
+  return;
+ }
+ s_pThis = this;
+
+ for (unsigned nIRQ = 0; nIRQ < (32 * 2 + 8 + 12); nIRQ++)
+ {
+  m_apIRQHandler[nIRQ] = 0;
+  m_pParam[nIRQ] = 0;
+ }
+}
+
+CInterruptSystem::~CInterruptSystem (void)
+{
+ Destructor ();
+}
+
+void CInterruptSystem::Destructor (void)
+{
+ if (s_pThis != this)
+ {
+  return;
+ }
+
+ asm volatile ("msr DAIFSet, #2");
+
+ ((void) 0);
+
+ pete_write32 (((0x3F000000 + 0xB000) + 0x20C), 0);
+
+ pete_write32 (((0x3F000000 + 0xB000) + 0x21C), (u32) -1);
+ pete_write32 (((0x3F000000 + 0xB000) + 0x220), (u32) -1);
+ pete_write32 (((0x3F000000 + 0xB000) + 0x224), (u32) -1);
+
+
+ pete_write32 ((0x40000000 + 0x040), 0);
+
+
+ ((void) 0);
+
+ s_pThis = 0;
+}
+
+boolean CInterruptSystem::Initialize (void)
+{
+ if (s_pThis != this)
+ {
+  return true;
+ }
+# 115 "interrupt.cpp"
+ ((void) 0);
+
+ pete_write32 (((0x3F000000 + 0xB000) + 0x20C), 0);                   // FIQ control
+
+ pete_write32 (((0x3F000000 + 0xB000) + 0x21C), (u32) -1);
+ pete_write32 (((0x3F000000 + 0xB000) + 0x220), (u32) -1);
+ pete_write32 (((0x3F000000 + 0xB000) + 0x224), (u32) -1);
+
+
+ pete_write32 ((0x40000000 + 0x040), 0);
+
+
+ ((void) 0);
+
+
+ asm volatile ("msr DAIFClr, #2");
+
+ return true;
+}
+
+void CInterruptSystem::ConnectIRQ (unsigned nIRQ, TIRQHandler *pHandler, void *pParam)
+{
+ if (s_pThis != this)
+ {
+  s_pThis->ConnectIRQ (nIRQ, pHandler, pParam);
+
+  return;
+ }
+
+ ( __builtin_expect (!!(nIRQ < (32 * 2 + 8 + 12)), 1) ? ((void) 0) : assertion_failed ("nIRQ < IRQ_LINES", "interrupt.cpp", 144));
+ ( __builtin_expect (!!(m_apIRQHandler[nIRQ] == 0), 1) ? ((void) 0) : assertion_failed ("m_apIRQHandler[nIRQ] == 0", "interrupt.cpp", 145));
+
+ m_apIRQHandler[nIRQ] = pHandler;
+ m_pParam[nIRQ] = pParam;
+
+ EnableIRQ (nIRQ);
+}
+
+void CInterruptSystem::DisconnectIRQ (unsigned nIRQ)
+{
+ if (s_pThis != this)
+ {
+  s_pThis->DisconnectIRQ (nIRQ);
+
+  return;
+ }
+
+ ( __builtin_expect (!!(nIRQ < (32 * 2 + 8 + 12)), 1) ? ((void) 0) : assertion_failed ("nIRQ < IRQ_LINES", "interrupt.cpp", 162));
+ ( __builtin_expect (!!(m_apIRQHandler[nIRQ] != 0), 1) ? ((void) 0) : assertion_failed ("m_apIRQHandler[nIRQ] != 0", "interrupt.cpp", 163));
+
+ DisableIRQ (nIRQ);
+
+ m_apIRQHandler[nIRQ] = 0;
+ m_pParam[nIRQ] = 0;
+}
+
+void CInterruptSystem::ConnectFIQ (unsigned nFIQ, TFIQHandler *pHandler, void *pParam)
+{
+ if (s_pThis != this)
+ {
+  s_pThis->ConnectFIQ (nFIQ, pHandler, pParam);
+
+  return;
+ }
+
+
+
+
+ ( __builtin_expect (!!(nFIQ <= 71), 1) ? ((void) 0) : assertion_failed ("nFIQ <= ARM_MAX_FIQ", "interrupt.cpp", 183));
+ ( __builtin_expect (!!(pHandler != 0), 1) ? ((void) 0) : assertion_failed ("pHandler != 0", "interrupt.cpp", 184));
+ ( __builtin_expect (!!(FIQData.pHandler == 0), 1) ? ((void) 0) : assertion_failed ("FIQData.pHandler == 0", "interrupt.cpp", 185));
+
+ FIQData.pHandler = pHandler;
+ FIQData.pParam = pParam;
+
+ EnableFIQ (nFIQ);
+}
+
+void CInterruptSystem::DisconnectFIQ (void)
+{
+ if (s_pThis != this)
+ {
+  s_pThis->DisconnectFIQ ();
+
+  return;
+ }
+
+ ( __builtin_expect (!!(FIQData.pHandler != 0), 1) ? ((void) 0) : assertion_failed ("FIQData.pHandler != 0", "interrupt.cpp", 202));
+
+ DisableFIQ ();
+
+ FIQData.pHandler = 0;
+ FIQData.pParam = 0;
+}
+
+void CInterruptSystem::EnableIRQ (unsigned nIRQ)
+{
+ ((void) 0);
+
+ ( __builtin_expect (!!(nIRQ < (32 * 2 + 8 + 12)), 1) ? ((void) 0) : assertion_failed ("nIRQ < IRQ_LINES", "interrupt.cpp", 214));
+
+ if (nIRQ < (((0 + 32) + 32) + 8))
+ {
+  pete_write32 (( (nIRQ) < (0 + 32) ? ((0x3F000000 + 0xB000) + 0x210) : ((nIRQ) < ((0 + 32) + 32) ? ((0x3F000000 + 0xB000) + 0x214) : ((0x3F000000 + 0xB000) + 0x218))), (1 << ((nIRQ) & (32 -1))));
+ }
+ else
+ {
+
+  ( __builtin_expect (!!(nIRQ == ((((0 + 32) + 32) + 8) + 1)), 1) ? ((void) 0) : assertion_failed ("nIRQ == ARM_IRQLOCAL0_CNTPNS", "interrupt.cpp", 223));
+  pete_write32 ((0x40000000 + 0x040),
+    read32 ((0x40000000 + 0x040)) | (1 << 1));
+
+
+
+ }
+
+ ((void) 0);
+}
+
+void CInterruptSystem::DisableIRQ (unsigned nIRQ)
+{
+ ((void) 0);
+
+ ( __builtin_expect (!!(nIRQ < (32 * 2 + 8 + 12)), 1) ? ((void) 0) : assertion_failed ("nIRQ < IRQ_LINES", "interrupt.cpp", 238));
+
+ if (nIRQ < (((0 + 32) + 32) + 8))
+ {
+  pete_write32 (( (nIRQ) < (0 + 32) ? ((0x3F000000 + 0xB000) + 0x21C) : ((nIRQ) < ((0 + 32) + 32) ? ((0x3F000000 + 0xB000) + 0x220) : ((0x3F000000 + 0xB000) + 0x224))), (1 << ((nIRQ) & (32 -1))));
+ }
+ else
+ {
+
+  ( __builtin_expect (!!(nIRQ == ((((0 + 32) + 32) + 8) + 1)), 1) ? ((void) 0) : assertion_failed ("nIRQ == ARM_IRQLOCAL0_CNTPNS", "interrupt.cpp", 247));
+  pete_write32 ((0x40000000 + 0x040),
+    read32 ((0x40000000 + 0x040)) & ~(1 << 1));
+
+
+
+ }
+
+ ((void) 0);
+}
+
+void CInterruptSystem::EnableFIQ (unsigned nFIQ)
+{
+ ((void) 0);
+
+ ( __builtin_expect (!!(nFIQ <= 71), 1) ? ((void) 0) : assertion_failed ("nFIQ <= ARM_MAX_FIQ", "interrupt.cpp", 262));
+
+ pete_write32 (((0x3F000000 + 0xB000) + 0x20C), nFIQ | 0x80);
+
+ ((void) 0);
+}
+
+void CInterruptSystem::DisableFIQ (void)
+{
+ ((void) 0);
+
+ pete_write32 (((0x3F000000 + 0xB000) + 0x20C), 0);
+
+ ((void) 0);
+}
+
+CInterruptSystem *CInterruptSystem::Get (void)
+{
+ ( __builtin_expect (!!(s_pThis != 0), 1) ? ((void) 0) : assertion_failed ("s_pThis != 0", "interrupt.cpp", 280));
+ return s_pThis;
+}
+
+boolean CInterruptSystem::CallIRQHandler (unsigned nIRQ)
+{
+ ( __builtin_expect (!!(nIRQ < (32 * 2 + 8 + 12)), 1) ? ((void) 0) : assertion_failed ("nIRQ < IRQ_LINES", "interrupt.cpp", 286));
+ TIRQHandler *pHandler = m_apIRQHandler[nIRQ];
+
+ if (pHandler != 0)
+ {
+  (*pHandler) (m_pParam[nIRQ]);
+
+  return true;
+ }
+ else
+ {
+  DisableIRQ (nIRQ);
+ }
+
+ return false;
+}
+
+void CInterruptSystem::InterruptHandler (void)
+{
+ ( __builtin_expect (!!(s_pThis != 0), 1) ? ((void) 0) : assertion_failed ("s_pThis != 0", "interrupt.cpp", 305));
+
+
+ u32 nLocalPending = read32 ((0x40000000 + 0x060));
+ ( __builtin_expect (!!(!(nLocalPending & ~(1 << 1 | 0xF << 4 | 1 << 8))), 1) ? ((void) 0) : assertion_failed ("!(nLocalPending & ~(1 << 1 | 0xF << 4 | 1 << 8))", "interrupt.cpp", 309));
+ if (nLocalPending & (1 << 1))
+ {
+  s_pThis->CallIRQHandler (((((0 + 32) + 32) + 8) + 1));
+
+  return;
+ }
+# 325 "interrupt.cpp"
+ ((void) 0);
+
+ u32 Pending[3];
+ Pending[0] = read32 (((0x3F000000 + 0xB000) + 0x204));
+ Pending[1] = read32 (((0x3F000000 + 0xB000) + 0x208));
+ Pending[2] = read32 (((0x3F000000 + 0xB000) + 0x200)) & 0xFF;
+
+ ((void) 0);
+
+ for (unsigned nReg = 0; nReg < 3; nReg++)
+ {
+  u32 nPending = Pending[nReg];
+  if (nPending != 0)
+  {
+   unsigned nIRQ = nReg * 32;
+
+   do
+   {
+    if ( (nPending & 1)
+        && s_pThis->CallIRQHandler (nIRQ))
+    {
+     return;
+    }
+
+    nPending >>= 1;
+    nIRQ++;
+   }
+   while (nPending != 0);
+  }
+ }
+}
+
+void InterruptHandler (void)
+{
+ ((void) 0);
+
+ CInterruptSystem::InterruptHandler ();
+
+ ((void) 0);
+}

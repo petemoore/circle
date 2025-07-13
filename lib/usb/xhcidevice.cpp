@@ -225,6 +225,25 @@ boolean CXHCIDevice::Initialize (boolean bScanDevices)
 		return FALSE;	// logger message was generated inside AllocateSharedMem()
 	}
 
+	u64 dma_base = XHCI_TO_DMA (m_pScratchpadBuffers);
+	u64 dma_offset = XHCI_TO_DMA (0);
+	unsigned long scratchpad_base = (unsigned long) m_pScratchpadBuffers;
+
+	CLogger::Get ()->Write ("xhci-log-prefix", LogNotice,
+	    "Scratchpad Buffer base address: 0x%08X%08X",
+	    (unsigned)(scratchpad_base >> 32),
+	    (unsigned)(scratchpad_base & 0xFFFFFFFF));
+
+	CLogger::Get ()->Write ("xhci-log-prefix", LogNotice,
+	    "DMA offset (XHCI_TO_DMA(0)):     0x%08X%08X",
+	    (unsigned)(dma_offset >> 32),
+	    (unsigned)(dma_offset & 0xFFFFFFFF));
+
+	CLogger::Get ()->Write ("xhci-log-prefix", LogNotice,
+	    "DMA base address:                0x%08X%08X",
+	    (unsigned)(dma_base >> 32),
+	    (unsigned)(dma_base & 0xFFFFFFFF));
+
 	for (unsigned i = 0; i < nMaxScratchpadBufs; i++)
 	{
 		m_pScratchpadBufferArray[i] = XHCI_TO_DMA (m_pScratchpadBuffers) + XHCI_PAGE_SIZE*i;

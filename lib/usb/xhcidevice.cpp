@@ -228,6 +228,10 @@ boolean CXHCIDevice::Initialize (boolean bScanDevices)
 	for (unsigned i = 0; i < nMaxScratchpadBufs; i++)
 	{
 		m_pScratchpadBufferArray[i] = XHCI_TO_DMA (m_pScratchpadBuffers) + XHCI_PAGE_SIZE*i;
+		CLogger::Get ()->Write ("xhci-log-prefix", LogNotice, "Scratchpad buffer %u DMA addr: 0x%08X%08X",
+		i,
+		(unsigned)(m_pScratchpadBufferArray[i] >> 32),
+		(unsigned)(m_pScratchpadBufferArray[i] & 0xFFFFFFFF));
 	}
 
 	m_pSlotManager->AssignScratchpadBufferArray (m_pScratchpadBufferArray);

@@ -280,6 +280,8 @@ TXHCIInputContext *CXHCIUSBDevice::GetInputContextAddressDevice (void)
 
 	CleanAndInvalidateDataCacheRange ((uintptr) pInputContext, sizeof *pInputContext);
 
+	debug_hexdump (pInputContext, sizeof *pInputContext, "inputcontext");
+
 	return pInputContext;
 }
 

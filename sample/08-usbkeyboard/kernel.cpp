@@ -83,6 +83,7 @@ boolean CKernel::Initialize (void)
 	{
 		bOK = m_USBHCI.Initialize ();
 	}
+	m_USBHCI.DumpStatus ();
 
 	return bOK;
 }

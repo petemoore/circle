@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "qemu";
+
 #include <circle/qemu.h>
 
 #define SHFB_MAGIC_0	0x53

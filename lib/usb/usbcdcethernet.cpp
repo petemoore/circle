@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "usbcdcethernet";
+
 #include <circle/usb/usbcdcethernet.h>
 #include <circle/usb/usbhostcontroller.h>
 #include <circle/usb/usbstring.h>

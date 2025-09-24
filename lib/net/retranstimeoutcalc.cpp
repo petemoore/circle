@@ -19,6 +19,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "retranstimeoutcalc";
+
 #include <circle/net/retranstimeoutcalc.h>
 #include <circle/logger.h>
 #include <assert.h>

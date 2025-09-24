@@ -102,4 +102,6 @@ private:
 	static CLogger *s_pThis;
 };
 
+#define LOGNOTE(...)		CLogger::Get ()->Write (From, LogNotice, __VA_ARGS__)
+
 #endif

@@ -5,7 +5,9 @@
 // 	10MHzClock.c
 // 	2014-10-24
 // 	Public Domain
-//
+
+static const char From[] = "gpioclock";
+
 #include <circle/gpioclock.h>
 #include <circle/bcm2835.h>
 #include <circle/timer.h>

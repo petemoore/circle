@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "usbserialft231x";
+
 #include <circle/usb/usbserialft231x.h>
 #include <circle/usb/usbhostcontroller.h>
 #include <circle/devicenameservice.h>

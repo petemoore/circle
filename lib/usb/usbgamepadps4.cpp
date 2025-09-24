@@ -20,6 +20,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "usbgamepadps4";
+
 #include <circle/usb/usbgamepadps4.h>
 #include <circle/usb/usbhid.h>
 #include <circle/usb/usbhostcontroller.h>

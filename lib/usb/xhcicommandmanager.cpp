@@ -21,6 +21,7 @@
 #include <circle/usb/xhcidevice.h>
 #include <circle/synchronize.h>
 #include <circle/logger.h>
+#include <circle/debug.h>
 #include <assert.h>
 
 static const char From[] = "xhcicmd";
@@ -168,6 +169,8 @@ int CXHCICommandManager::DoCommand (u32 nControl, u32 nParameter1, u32 nParamete
 
 	assert (!(nControl & XHCI_TRB_CONTROL_C));
 	pCmdTRB->Control = nControl | m_CmdRing.GetCycleState ();
+
+	debug_hexdump (pCmdTRB, sizeof *pCmdTRB, "xhcicommand");
 
 	m_pCurrentCommandTRB = pCmdTRB;
 	m_bCommandCompleted = FALSE;

@@ -97,11 +97,8 @@ private:
 
 	TLogEventNotificationHandler *m_pEventNotificationHandler;
 	TLogPanicHandler *m_pPanicHandler;
-	boolean m_bEnabled;
 
 	static CLogger *s_pThis;
 };
-
-#define LOGNOTE(...)		CLogger::Get ()->Write (From, LogNotice, __VA_ARGS__)
 
 #endif

@@ -17,6 +17,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+static const char From[] = "logger";
+
 #include <circle/logger.h>
 #include <circle/string.h>
 #include <circle/synchronize.h>
@@ -52,7 +55,8 @@ CLogger::CLogger (unsigned nLogLevel, CTimer *pTimer)
 	m_nEventInPtr (0),
 	m_nEventOutPtr (0),
 	m_pEventNotificationHandler (0),
-	m_pPanicHandler (0)
+	m_pPanicHandler (0),
+	m_bEnabled (FALSE)
 {
 	m_pBuffer = new char[LOGGER_BUFSIZE];
 
@@ -83,6 +87,7 @@ CLogger::~CLogger (void)
 boolean CLogger::Initialize (CDevice *pTarget)
 {
 	m_pTarget = pTarget;
+	m_bEnabled = TRUE;
 
 	Write ("logger", LogNotice, CIRCLE_NAME " " CIRCLE_VERSION_STRING " started on %s"
 #if AARCH == 64
@@ -101,6 +106,10 @@ void CLogger::SetNewTarget (CDevice *pTarget)
 void CLogger::Write (const char *pSource, TLogSeverity Severity, const char *pMessage, ...)
 {
 	va_list var;
+	if (!m_bEnabled)
+	{
+		return;
+	}
 	va_start (var, pMessage);
 
 	WriteV (pSource, Severity, pMessage, var);
@@ -111,6 +120,10 @@ void CLogger::Write (const char *pSource, TLogSeverity Severity, const char *pMe
 void CLogger::WriteV (const char *pSource, TLogSeverity Severity, const char *pMessage, va_list Args)
 {
 	CString Message;
+	if (!m_bEnabled)
+	{
+		return;
+	}
 	Message.FormatV (pMessage, Args);
 
 	WriteEvent (pSource, Severity, Message);
@@ -175,6 +188,10 @@ void CLogger::WriteV (const char *pSource, TLogSeverity Severity, const char *pM
 
 void CLogger::WriteNoAlloc (const char *pSource, TLogSeverity Severity, const char *pMessage)
 {
+	if (!m_bEnabled)
+	{
+		return;
+	}
 	if (Severity > m_nLogLevel)
 	{
 		return;
@@ -230,6 +247,10 @@ CLogger *CLogger::Get (void)
 
 void CLogger::Write (const char *pString)
 {
+	if (!m_bEnabled)
+	{
+		return;
+	}
 	unsigned long nLength = strlen (pString);
 
 	if (m_pTarget != 0)
@@ -238,6 +259,7 @@ void CLogger::Write (const char *pString)
 	}
 
 	m_SpinLock.Acquire ();
+	m_bEnabled = FALSE;
 
 	while (nLength--)
 	{
@@ -259,11 +281,16 @@ void CLogger::Write (const char *pString)
 		}
 	}
 
+	m_bEnabled = TRUE;
 	m_SpinLock.Release ();
 }
 
 int CLogger::Read (void *pBuffer, unsigned nCount)
 {
+	if (!m_bEnabled)
+	{
+		return -1;
+	}
 	m_SpinLock.Acquire ();
 
 	if (m_nInPtr == m_nOutPtr)
@@ -297,6 +324,10 @@ int CLogger::Read (void *pBuffer, unsigned nCount)
 
 void CLogger::WriteEvent (const char *pSource, TLogSeverity Severity, const char *pMessage)
 {
+	if (!m_bEnabled)
+	{
+		return;
+	}
 	TLogEvent *pEvent = new TLogEvent;
 	if (pEvent == 0)
 	{
@@ -363,6 +394,10 @@ void CLogger::WriteEvent (const char *pSource, TLogSeverity Severity, const char
 boolean CLogger::ReadEvent (TLogSeverity *pSeverity, char *pSource, char *pMessage,
 			    time_t *pTime, unsigned *pHundredthTime, int *pTimeZone)
 {
+	if (!m_bEnabled)
+	{
+		return FALSE;
+	}
 	m_EventSpinLock.Acquire ();
 
 	if (m_nEventInPtr == m_nEventOutPtr)

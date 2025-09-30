@@ -63,7 +63,7 @@ static inline void write16 (uintptr nAddress, u16 usValue)
 static inline u32 read32 (uintptr nAddress)
 {
 	u32 result;
-    result = *(u32 volatile *) nAddress;
+	result = *(u32 volatile *) nAddress;
 	LOGNOTE ("read32 [%x] = %x", nAddress, result);
 	return result;
 }

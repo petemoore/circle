@@ -521,6 +521,14 @@ void CXHCIEndpoint::CompletionRoutine (CUSBRequest *pURB, void *pParam, void *pC
 
 boolean CXHCIEndpoint::EnqueueTRB (u32 nControl, u32 nStatus, u32 nParameter1, u32 nParameter2)
 {
+
+	CLogger::Get ()->Write (From, LogDebug,
+				"Enqueue TRB control 0x%x status 0x%x param1 0x%x param2 0x%x",
+				nControl,
+				nStatus,
+				nParameter1,
+				nParameter2);
+
 	assert (m_pTransferRing != 0);
 	TXHCITRB *pTransferTRB = m_pTransferRing->GetEnqueueTRB ();
 	if (pTransferTRB == 0)
@@ -536,6 +544,9 @@ boolean CXHCIEndpoint::EnqueueTRB (u32 nControl, u32 nStatus, u32 nParameter1, u
 			         << XHCI_TRANSFER_TRB_STATUS_INTERRUPTER_TARGET__SHIFT;
 
 	pTransferTRB->Control = nControl | m_pTransferRing->GetCycleState ();
+
+	LOGDBG ("TRB enqueued:");
+	debug_hexdump (pTransferTRB, sizeof (TXHCITRB), From);
 
 	m_pTransferRing->IncrementEnqueue ();
 

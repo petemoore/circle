@@ -37,6 +37,7 @@ CUSBConfigurationParser::CUSBConfigurationParser (const void *pBuffer, unsigned 
 	m_pErrorPosition (m_pBuffer)
 {
 	assert (m_pBuffer != 0);
+	debug_hexdump (m_pBuffer, m_nBufLen, From);
 	
 	if (   m_nBufLen < 4		// wTotalLength must exist
 	    || m_nBufLen > 1024)	// best guess
@@ -227,6 +228,7 @@ void CUSBConfigurationParser::Error (const char *pSource) const
 				"Invalid configuration descriptor (offset 0x%X)",
 				(unsigned) ((u8 *) m_pErrorPosition - (u8 *) m_pBuffer));
 #ifndef NDEBUG
+	LOGDBG("ERROR in usb config parser");
 	debug_hexdump (m_pBuffer, m_nBufLen, pSource);
 #endif
 }
